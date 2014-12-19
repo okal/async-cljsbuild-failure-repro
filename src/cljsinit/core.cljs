@@ -1,4 +1,6 @@
-(ns cljsinit.core)
+(ns cljsinit.core
+  (:require
+   [clojure.string :refer [upper-case]]))
 
 (defn upper [x]
-  (clojure.string/upper-case x))
+  (upper-case x))
