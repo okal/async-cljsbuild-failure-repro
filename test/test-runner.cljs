@@ -1,14 +1,18 @@
 (ns test-runner
   (:require
-   [cljs.test :refer-macros [run-tests]]
+   [cljs.test :as test :refer-macros [run-tests] :refer [report]]
    [cljsinit.core-test]))
 
 
 (enable-console-print!)
 
+(defmethod report [::test/default :summary] [m]
+  (println "\nRan" (:test m) "tests containing"
+           (+ (:pass m) (:fail m) (:error m)) "assertions.")
+  (println (:fail m) "failures," (:error m) "errors.")
+  (aset js/window "test-failures" (+ (:fail m) (:error m))))
+
 (defn runner []
-  (if (cljs.test/successful?
-        (run-tests
-          'cljsinit.core-test))
-    0
-    1))
+  (test/run-tests
+   (test/empty-env ::test/default)
+   'cljsinit.core-test))

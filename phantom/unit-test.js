@@ -21,17 +21,17 @@ page.open(url, function (status) {
 
     console.log("Running test.");
 
-    var result = page.evaluate(function() {
-        return test_runner.runner();
+    var failures = page.evaluate(function() {
+        test_runner.runner();
+        return window["test-failures"];
     });
 
-    if (result != 0) {
-        console.log("*** Test failed! ***");
-        exit(1);
+    if (failures == 0) {
+        console.log("Tests succeeded.")
     }
     else {
-	console.log("Test succeeded.");
-	exit(0);
+        console.log("*** Tests failed! ***");
     }
     
+    phantom.exit(failures?100:0);
 });
